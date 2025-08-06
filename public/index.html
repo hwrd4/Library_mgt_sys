@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <h1>Library Management System</h1>
+            <ul>
+                <li><a href="#books">Books</a></li>
+                <li><a href="#ebooks">E-Books</a></li>
+                <li><a href="#customers">Customers</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="books">
+            <h2>Books Management</h2>
+            <div class="form-container">
+                <form id="addBookForm">
+                    <input type="text" placeholder="Title" required>
+                    <input type="text" placeholder="Author" required>
+                    <input type="text" placeholder="ISBN" required>
+                    <input type="number" placeholder="Copies" required>
+                    <button type="submit">Add Book</button>
+                </form>
+            </div>
+            <div id="booksList"></div>
+        </section>
+
+        <section id="ebooks">
+            <h2>E-Books Management</h2>
+            <div class="form-container">
+                <form id="addEbookForm">
+                    <input type="text" placeholder="Title" required>
+                    <input type="text" placeholder="Author" required>
+                    <input type="text" placeholder="ISBN" required>
+                    <input type="text" placeholder="Format" required>
+                    <input type="url" placeholder="File URL" required>
+                    <button type="submit">Add E-Book</button>
+                </form>
+            </div>
+            <div id="ebooksList"></div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
