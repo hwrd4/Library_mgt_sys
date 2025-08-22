@@ -1,5 +1,5 @@
 const express = require('express');
-const mysql = require('mysql2');
+const { Pool } = require('pg');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -35,12 +35,16 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static('public'));
 
-// MySQL Connection
-const sqlDb = mysql.createConnection({
-  host: process.env.MYSQL_HOST || 'localhost',
-  user: process.env.MYSQL_USER || 'root',
-  password: process.env.MYSQL_PASSWORD || 'password',
-  database: process.env.MYSQL_DATABASE || 'library_db'
+// PostgreSQL Connection Pool
+const sqlDb = new Pool({
+  host: process.env.POSTGRES_HOST || 'postgres',
+  user: process.env.POSTGRES_USER || 'postgres',
+  password: process.env.POSTGRES_PASSWORD || 'password',
+  database: process.env.POSTGRES_DATABASE || 'library_db',
+  port: 5432,
+  max: 10,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 2000,
 });
 
 // Database middleware - makes connection available to all routes
@@ -50,9 +54,13 @@ app.use((req, res, next) => {
 });
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/library_ebooks', {
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://mongodb:27017/library_ebooks', {
   useNewUrlParser: true,
   useUnifiedTopology: true
+}).then(() => {
+  console.log('✅ MongoDB connected successfully');
+}).catch(error => {
+  console.error('❌ MongoDB connection failed:', error.message);
 });
 
 // Simple metrics endpoint
@@ -70,6 +78,20 @@ app.get('/health', (req, res) => {
   res.status(200).json({ 
     status: 'healthy', 
     timestamp: new Date().toISOString()
+  });
+});
+
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Library Management System API',
+    version: '1.0.0',
+    endpoints: {
+      books: '/api/books',
+      customers: '/api/customers',
+      ebooks: '/api/ebooks',
+      health: '/health',
+      metrics: '/metrics'
+    }
   });
 });
 
